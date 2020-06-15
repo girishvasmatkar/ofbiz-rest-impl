@@ -4,9 +4,15 @@ This draft implementation helps to expose existing or new OFBiz services as REST
 Those changes are here : https://github.com/girishvasmatkar/ofbiz-framework/tree/feature/add-service-verb
 So, you need to be on
 
-Repository : https://github.com/girishvasmatkar/ofbiz-framework.git 
-
+Repository : https://github.com/girishvasmatkar/ofbiz-framework.git +
 Branch : feature/add-service-verb
+
+Another DEMO plug in has a POST service (searchProductsByGoodIdentificationValue)(exprt="true" verb="post") defined - +
+https://github.com/girishvasmatkar/rest-demo.git
+
+All in all following are the requirements : +
+OFBiz Framework: 
+
 
 ==== Important URLs
 * API https://localhost:8443/rest
@@ -30,10 +36,12 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJBcGFjaGVPR
 ==== Example
 
 * List All Services (export="true" and verb = "get|post")
-
-GET /rest/services HTTP/1.1 +
-Content-Type: application/json +
+[source, json]
+----
+GET /rest/services HTTP/1.1
+Content-Type: application/json
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJBcGFjaGVPRkJpeiIsImlhdCI6MTU0NzczOTM0OCwiZXhwIjoxNjc5Mjc1MzQ4LCJhdWQiOiJ3d3cuZXhhbXBsZS5jb20iLCJzdWIiOiJqcm9ja2V0QGV4YW1wbGUuY29tIiwiR2l2ZW5OYW1lIjoiSm9obm55IiwiU3VybmFtZSI6IlJvY2tldCIsIkVtYWlsIjoianJvY2tldEBleGFtcGxlLmNvbSIsInVzZXJMb2dpbklkIjoiYWRtaW4iLCJSb2xlIjpbIk1hbmFnZXIiLCJQcm9qZWN0IEFkbWluaXN0cmF0b3IiXX0.fwafgrgpodBJcXxNTQdZknKeWKb3sDOsQrcR2vcRw97FznD6mkE79p10Tu7cqpUx7LiXuROUAnXEgqDice-BSg
+----
 
 Response :
 [source, json]
@@ -62,14 +70,14 @@ Response :
 }
 ----
 
-* Call OFBiz service (export="true" and verb = "get|post")
+* Call OFBiz service via GET(export="true" and verb = "get|post")
 
-GET /rest/services/findProductById?inParams=%7B%22idToFind%22:%22GZ-1001%22%7D HTTP/1.1 +
-Content-Type: application/json +
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJBcGFjaGVPRkJpeiIsImlhdCI6MTU0NzczOTM0OCwiZXhwIjoxNjc5Mjc1MzQ4LCJhdWQiOiJ3d3cuZXhhbXBsZS5jb20iLCJzdWIiOiJqcm9ja2V0QGV4YW1wbGUuY29tIiwiR2l2ZW5OYW1lIjoiSm9obm55IiwiU3VybmFtZSI6IlJvY2tldCIsIkVtYWlsIjoianJvY2tldEBleGFtcGxlLmNvbSIsInVzZXJMb2dpbklkIjoiYWRtaW4iLCJSb2xlIjpbIk1hbmFnZXIiLCJQcm9qZWN0IEFkbWluaXN0cmF0b3IiXX0.fwafgrgpodBJcXxNTQdZknKeWKb3sDOsQrcR2vcRw97FznD6mkE79p10Tu7cqpUx7LiXuROUAnXEgqDice-BSg
 
 [source, json]
 ----
+GET /rest/services/findProductById?inParams=%7B%22idToFind%22:%22GZ-1001%22%7D HTTP/1.1 +
+Content-Type: application/json +
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJBcGFjaGVPRkJpeiIsImlhdCI6MTU0NzczOTM0OCwiZXhwIjoxNjc5Mjc1MzQ4LCJhdWQiOiJ3d3cuZXhhbXBsZS5jb20iLCJzdWIiOiJqcm9ja2V0QGV4YW1wbGUuY29tIiwiR2l2ZW5OYW1lIjoiSm9obm55IiwiU3VybmFtZSI6IlJvY2tldCIsIkVtYWlsIjoianJvY2tldEBleGFtcGxlLmNvbSIsInVzZXJMb2dpbklkIjoiYWRtaW4iLCJSb2xlIjpbIk1hbmFnZXIiLCJQcm9qZWN0IEFkbWluaXN0cmF0b3IiXX0.fwafgrgpodBJcXxNTQdZknKeWKb3sDOsQrcR2vcRw97FznD6mkE79p10Tu7cqpUx7LiXuROUAnXEgqDice-BSg
 {
   "statusCode" : 200,
   "statusDescription" : "OK",
@@ -98,4 +106,37 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJBcGFjaGVPR
   }
 }
 ----
+
+* Call OFBiz Service via POST +
+[source, json]
+----
+POST rest/services/searchProductsByGoodIdentificationValue HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJBcGFjaGVPRkJpeiIsImlhdCI6MTU0NzczOTM0OCwiZXhwIjoxNjc5Mjc1MzQ4LCJhdWQiOiJ3d3cuZXhhbXBsZS5jb20iLCJzdWIiOiJqcm9ja2V0QGV4YW1wbGUuY29tIiwiR2l2ZW5OYW1lIjoiSm9obm55IiwiU3VybmFtZSI6IlJvY2tldCIsIkVtYWlsIjoianJvY2tldEBleGFtcGxlLmNvbSIsInVzZXJMb2dpbklkIjoiYWRtaW4iLCJSb2xlIjpbIk1hbmFnZXIiLCJQcm9qZWN0IEFkbWluaXN0cmF0b3IiXX0.fwafgrgpodBJcXxNTQdZknKeWKb3sDOsQrcR2vcRw97FznD6mkE79p10Tu7cqpUx7LiXuROUAnXEgqDice-BSg
+{
+    "idFragment": "2644"
+}
+----
+
+Response +
+[source, json]
+----
+{
+  "statusCode" : 200,
+  "statusDescription" : "OK",
+  "data" : {
+    "products" : [ {
+      "internalName" : "Round Gizmo",
+      "productId" : "GZ-2644",
+      "primaryProductCategoryId" : "101",
+      "isVariant" : "N",
+      "goodIdentificationTypeId" : "INVOICE_EXPORT",
+      "idValue" : "GZ-2644-replaced",
+      "isVirtual" : "N"
+    } ]
+  }
+}
+----
+
+
 
