@@ -26,12 +26,14 @@ Once deployed, following URLs can be accessed
 * POST /rest/services/{serviceName} (For this endpoint, the service in parameters must be part of Request Body)
 
 ==== Authentication
-All three demo endpoints are secured. Authentication scheme is "Bearer <JWT>". Every request to the three API endpoints must have an Authorization header associated with it. 
+Draft implementation inluced Bearer Auth Scheme. Authentication scheme is "Bearer <JWT>". The implementation can be update to include other authentication schemes as well.
 Example -
 
+[source, json]
+----
 GET /rest/services HTTP/1.1
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJBcGFjaGVPRkJpeiIsImlhdCI6MTU0NzczOTM0OCwiZXhwIjoxNjc5Mjc1MzQ4LCJhdWQiOiJ3d3cuZXhhbXBsZS5jb20iLCJzdWIiOiJqcm9ja2V0QGV4YW1wbGUuY29tIiwiR2l2ZW5OYW1lIjoiSm9obm55IiwiU3VybmFtZSI6IlJvY2tldCIsIkVtYWlsIjoianJvY2tldEBleGFtcGxlLmNvbSIsInVzZXJMb2dpbklkIjoiYWRtaW4iLCJSb2xlIjpbIk1hbmFnZXIiLCJQcm9qZWN0IEFkbWluaXN0cmF0b3IiXX0.fwafgrgpodBJcXxNTQdZknKeWKb3sDOsQrcR2vcRw97FznD6mkE79p10Tu7cqpUx7LiXuROUAnXEgqDice-BSg
-
+----
 
 ==== Example
 
