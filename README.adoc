@@ -7,12 +7,8 @@ So, you need to be on
 Repository : https://github.com/girishvasmatkar/ofbiz-framework.git +
 Branch : feature/add-service-verb
 
-Another DEMO plug in has a POST service (searchProductsByGoodIdentificationValue)(exprt="true" verb="post") defined - +
+Another DEMO plug-in has a POST service (searchProductsByGoodIdentificationValue)(exprt="true" verb="post") defined - +
 https://github.com/girishvasmatkar/rest-demo.git
-
-All in all following are the requirements : +
-OFBiz Framework: 
-
 
 ==== Important URLs
 * API https://localhost:8443/rest
