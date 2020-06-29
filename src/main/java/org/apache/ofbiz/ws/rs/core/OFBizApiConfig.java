@@ -32,7 +32,7 @@ public class OFBizApiConfig extends ResourceConfig {
 		packages("org.apache.ofbiz.ws.rs.resources");
 		packages("org.apache.ofbiz.ws.rs.security.auth");
 		packages("org.apache.ofbiz.ws.rs.spi.impl");
-		packages("io.swagger.v3.jaxrs2.integration.resources");
+		//packages("io.swagger.v3.jaxrs2.integration.resources"); //commenting it out to generate customized OpenApi Spec
 		register(JacksonFeature.class);
 		register(MultiPartFeature.class);
 		if (Debug.verboseOn()) {
