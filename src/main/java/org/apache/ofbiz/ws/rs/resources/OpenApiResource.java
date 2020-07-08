@@ -75,10 +75,10 @@ public class OpenApiResource {
 	    securitySchemeApiKey.setName("api-key");
 	    securitySchemeApiKey.setType(SecurityScheme.Type.APIKEY);
 	    securitySchemeApiKey.setIn(SecurityScheme.In.HEADER);
-		
 	    openApi.schemaRequirement(securitySchemeApiKey.getName(), securitySchemeApiKey);
 		SwaggerConfiguration config = new SwaggerConfiguration().openAPI(openApi.info(buildOpenApiInfo()))
 				.readerClass(OFBizOpenApiReader.class.getName());
+		
 
 		OpenApiContext ctx = new GenericOpenApiContextBuilder<>().openApiConfiguration(config).buildContext(true);
 
@@ -114,7 +114,8 @@ public class OpenApiResource {
 	}
 
 	private Server buildOpenApiServer() {
-		Server serverItem = new Server().url(request.getScheme()+"//"+request.getServerName()+":"+request.getServerPort()+"/"+request.getContextPath()).description("Server Hosting the REST API");
+		System.out.println(request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath());
+		Server serverItem = new Server().url(request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()).description("Server Hosting the REST API");
 		return serverItem;
 	}
 }
