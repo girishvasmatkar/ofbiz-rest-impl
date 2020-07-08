@@ -196,7 +196,6 @@ public class OFBizOpenApiReader implements OpenApiReader {
 		parentSchema.addProperties("data", dataSchema);
 		service.getOutParamNamesMap().forEach((name, type) -> {
 			Schema<?> schema = null;
-			System.out.println("type " + type + ", Name " + name);
 			Class<?> schemaClass = OpenApiUtil.getOpenApiSchema(type);
 			if (schemaClass == null) {
 				return;
@@ -206,12 +205,10 @@ public class OFBizOpenApiReader implements OpenApiReader {
 			} catch (InstantiationException | IllegalAccessException e) {
 			}
 			if (schema instanceof ArraySchema) {
-				System.out.println("Was instance of ArraySchema");
 				ArraySchema arraySchema = (ArraySchema) schema;
 				arraySchema.items(new StringSchema());
 			}
 			dataSchema.addProperties(name, schema.description(name));
-
 		});
 		schemas.put(service.name + "Response", parentSchema);
 	}
@@ -222,14 +219,15 @@ public class OFBizOpenApiReader implements OpenApiReader {
 		parentSchema.setType("object");
 		service.getInParamNamesMap().forEach((name, type) -> {
 			Schema<?> schema = null;
-			System.out.println("name: " + name + ", type: " + type);
 			Class<?> schemaClass = OpenApiUtil.getOpenApiSchema(type);
+			if (schemaClass == null) {
+				return;
+			}
 			try {
 				schema = (Schema<?>) schemaClass.newInstance();
 			} catch (InstantiationException | IllegalAccessException e) {
 			}
 			parentSchema.addProperties(name, schema.description(name));
-
 		});
 		schemas.put(service.name + "Request", parentSchema);
 	}
