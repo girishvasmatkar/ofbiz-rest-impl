@@ -1,4 +1,4 @@
-= POC Apache OFBiz® plugin for REST
+= Apache OFBiz® plugin for REST
 
 This draft implementation helps to expose existing or new OFBiz services as REST. To facilitate this, added a new "verb" attribute to service elements that helps to determine how a particular service can be accessed via REST.
 Those changes are here : https://github.com/girishvasmatkar/ofbiz-framework/tree/feature/add-service-verb
