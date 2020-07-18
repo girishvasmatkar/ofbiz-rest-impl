@@ -52,7 +52,7 @@ public class ServiceRequestProcessor {
 		} catch (GenericServiceException gse) {
 			throw new NotFoundException(gse.getMessage());
 		}
-		if (UtilValidate.isNotEmpty(service.verb) && !service.verb.equalsIgnoreCase(httpVerb)) {
+		if (UtilValidate.isNotEmpty(service.action) && !service.action.equalsIgnoreCase(httpVerb)) {
 			throw new MethodNotAllowedException("HTTP "+httpVerb+" is not allowed on this service.");
 		}
 		Map<String, Object> serviceContext = dispatchContext.makeValidContext(serviceName, ModelService.IN_PARAM, requestMap);

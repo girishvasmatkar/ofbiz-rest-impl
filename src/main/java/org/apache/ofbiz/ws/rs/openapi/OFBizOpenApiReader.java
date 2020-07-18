@@ -109,14 +109,14 @@ public class OFBizOpenApiReader implements OpenApiReader {
 			} catch (GenericServiceException e) {
 				e.printStackTrace();
 			}
-			if (service != null && service.export && UtilValidate.isNotEmpty(service.verb)) {
+			if (service != null && service.export && UtilValidate.isNotEmpty(service.action)) {
 				final Operation operation = new Operation().summary(service.description)
 						.description(service.description).addTagsItem("Exported Services").operationId(service.name)
 						.deprecated(false);
 
 				PathItem pathItemObject = new PathItem();
 
-				if (service.verb.equalsIgnoreCase(HttpMethod.GET)) {
+				if (service.action.equalsIgnoreCase(HttpMethod.GET)) {
 					final QueryParameter serviceInParam = (QueryParameter) new QueryParameter().required(true)
 							.description("Service In Parameters in JSON").name("inParams");
 					Schema<?> refSchema = new Schema<>();
@@ -124,7 +124,7 @@ public class OFBizOpenApiReader implements OpenApiReader {
 					serviceInParam.schema(refSchema);
 					operation.addParametersItem(serviceInParam);
 
-				} else if (service.verb.equalsIgnoreCase(HttpMethod.POST)) {
+				} else if (service.action.equalsIgnoreCase(HttpMethod.POST)) {
 					RequestBody request = new RequestBody().description("Request Body for service " + service.name)
 							.content(new Content().addMediaType(javax.ws.rs.core.MediaType.APPLICATION_JSON,
 									new MediaType().schema(new Schema<>().$ref(service.name + "Request"))));
@@ -143,7 +143,7 @@ public class OFBizOpenApiReader implements OpenApiReader {
 				content.addMediaType(javax.ws.rs.core.MediaType.APPLICATION_JSON, jsonMediaType);
 
 				apiResponsesObject.addApiResponse("200", successResponse.content(content));
-				setPathItemOperation(pathItemObject, service.verb.toUpperCase(), operation);
+				setPathItemOperation(pathItemObject, service.action.toUpperCase(), operation);
 				operation.setResponses(apiResponsesObject);
 				paths.addPathItem("/services/" + service.name, pathItemObject);
 

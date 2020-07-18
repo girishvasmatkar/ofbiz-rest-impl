@@ -73,11 +73,11 @@ public class OFBizServiceResource extends OFBizResource {
 		List<Map<String, Object>> serviceList = new ArrayList<>();
 		for (String serviceName : serviceNames) {
 			ModelService service = context.getModelService(serviceName);
-			if (service != null && service.export && UtilValidate.isNotEmpty(service.verb)) {
+			if (service != null && service.export && UtilValidate.isNotEmpty(service.action)) {
 				Map<String, Object> serviceMap = new LinkedHashMap<String, Object>();
 				serviceMap.put("name", service.name);
 				serviceMap.put("description", service.description);
-				Link selfLink = Link.fromUriBuilder(uriInfo.getAbsolutePathBuilder().path(service.name)).type(service.verb).rel("self").build();
+				Link selfLink = Link.fromUriBuilder(uriInfo.getAbsolutePathBuilder().path(service.name)).type(service.action).rel("self").build();
 				serviceMap.put("link", selfLink);
 				serviceList.add(serviceMap);
 			}
