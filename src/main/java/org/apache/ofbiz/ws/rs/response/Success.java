@@ -25,47 +25,47 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 @JsonRootName(value = "success")
 @JsonInclude(Include.NON_NULL)
 public class Success {
-	private int statusCode;
-	private String statusDescription;
-	private String successMessage;
-	protected Object data;
+    private int statusCode;
+    private String statusDescription;
+    private String successMessage;
+    protected Object data;
 
-	public Success(int statusCode, String statusDescription, String successMessage, Object data) {
-		this.statusCode = statusCode;
-		this.statusDescription = statusDescription;
-		this.successMessage = successMessage;
-		this.data = data;
-	}
+    public Success(int statusCode, String statusDescription, String successMessage, Object data) {
+        this.statusCode = statusCode;
+        this.statusDescription = statusDescription;
+        this.successMessage = successMessage;
+        this.data = data;
+    }
 
-	public int getStatusCode() {
-		return statusCode;
-	}
+    public int getStatusCode() {
+        return statusCode;
+    }
 
-	public void setStatusCode(int statusCode) {
-		this.statusCode = statusCode;
-	}
+    public void setStatusCode(int statusCode) {
+        this.statusCode = statusCode;
+    }
 
-	public String getStatusDescription() {
-		return statusDescription;
-	}
+    public String getStatusDescription() {
+        return statusDescription;
+    }
 
-	public void setStatusDescription(String statusDescription) {
-		this.statusDescription = statusDescription;
-	}
+    public void setStatusDescription(String statusDescription) {
+        this.statusDescription = statusDescription;
+    }
 
-	public String getSuccessMessage() {
-		return successMessage;
-	}
+    public String getSuccessMessage() {
+        return successMessage;
+    }
 
-	public void setSuccessMessage(String successMessage) {
-		this.successMessage = successMessage;
-	}
+    public void setSuccessMessage(String successMessage) {
+        this.successMessage = successMessage;
+    }
 
-	public Object getData() {
-		return data;
-	}
+    public Object getData() {
+        return data;
+    }
 
-	public void setData(Object data) {
-		this.data = data;
-	}
+    public void setData(Object data) {
+        this.data = data;
+    }
 }

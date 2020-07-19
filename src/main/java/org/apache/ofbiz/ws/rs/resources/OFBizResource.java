@@ -26,18 +26,16 @@ import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.service.LocalDispatcher;
 
 /**
- * 
- *
  *
  */
 @Provider
 public abstract class OFBizResource implements IOFBizResource {
 
-	@Context
-	ServletContext ServletContext;
+    @Context
+    protected ServletContext servletContext;
 
-	protected Delegator delegator = getDelegator();
+    protected Delegator delegator = getDelegator();
 
-	protected LocalDispatcher dispatcher = getDispatcher();
+    protected LocalDispatcher dispatcher = getDispatcher();
 
 }

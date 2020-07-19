@@ -22,19 +22,17 @@ import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.Response;
 
 /**
- * 
- * 
  *
  */
 public class MethodNotAllowedException extends ClientErrorException {
 
-	private static final long serialVersionUID = -3002310435429546325L;
+    private static final long serialVersionUID = -3002310435429546325L;
 
-	/**
+    /**
      * Construct a new Method Not Allowed exception.
      */
-	public MethodNotAllowedException(String message) {
-		super(message, Response.Status.METHOD_NOT_ALLOWED);
-	}
+    public MethodNotAllowedException(String message) {
+        super(message, Response.Status.METHOD_NOT_ALLOWED);
+    }
 
 }

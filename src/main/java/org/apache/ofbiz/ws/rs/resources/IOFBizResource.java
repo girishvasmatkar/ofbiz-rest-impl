@@ -26,21 +26,19 @@ import org.apache.ofbiz.webapp.WebAppUtil;
 import org.apache.ofbiz.ws.rs.listener.ApiContextListener;
 
 /**
- * 
  * Resource Interface
- *
  */
 @Provider
 public interface IOFBizResource {
 
-	default public Delegator getDelegator() {
-		Delegator delegator = WebAppUtil.getDelegator(ApiContextListener.getApplicationCntx());
-		return delegator;
-	}
+    default Delegator getDelegator() {
+        Delegator delegator = WebAppUtil.getDelegator(ApiContextListener.getApplicationCntx());
+        return delegator;
+    }
 
-	default public LocalDispatcher getDispatcher() {
-		LocalDispatcher dispatcher = WebAppUtil.getDispatcher(ApiContextListener.getApplicationCntx());
-		return dispatcher;
-	}
+    default LocalDispatcher getDispatcher() {
+        LocalDispatcher dispatcher = WebAppUtil.getDispatcher(ApiContextListener.getApplicationCntx());
+        return dispatcher;
+    }
 
 }

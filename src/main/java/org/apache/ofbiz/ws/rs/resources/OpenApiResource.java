@@ -50,72 +50,74 @@ import io.swagger.v3.oas.models.servers.Server;
 
 @Path("/openapi.{type:json|yaml}")
 public class OpenApiResource {
-	@Context
-	ServletConfig config;
+    @Context
+    ServletConfig config;
 
-	@Context
-	ServletContext context;
-	
-	@Context
-	HttpServletRequest request;
+    @Context
+    ServletContext context;
 
-	@Context
-	Application app;
+    @Context
+    HttpServletRequest request;
 
-	@GET
-	@Produces({ MediaType.APPLICATION_JSON, "application/yaml" })
-	@Operation(hidden = true)
-	public Response getOpenApi(@Context HttpHeaders headers, @Context UriInfo uriInfo, @PathParam("type") String type)
-			throws Exception {
-		boolean pretty = false;
-		OpenAPI openApi = new OpenAPI();
-		openApi.addServersItem(buildOpenApiServer());
-		
-		SecurityScheme securitySchemeApiKey = new SecurityScheme();
-	    securitySchemeApiKey.setName("api-key");
-	    securitySchemeApiKey.setType(SecurityScheme.Type.APIKEY);
-	    securitySchemeApiKey.setIn(SecurityScheme.In.HEADER);
-	    openApi.schemaRequirement(securitySchemeApiKey.getName(), securitySchemeApiKey);
-		SwaggerConfiguration config = new SwaggerConfiguration().openAPI(openApi.info(buildOpenApiInfo()))
-				.readerClass(OFBizOpenApiReader.class.getName());
-		
+    @Context
+    Application app;
 
-		OpenApiContext ctx = new GenericOpenApiContextBuilder<>().openApiConfiguration(config).buildContext(true);
+    @GET
+    @Produces({MediaType.APPLICATION_JSON, "application/yaml"})
+    @Operation(hidden = true)
+    public Response getOpenApi(@Context HttpHeaders headers, @Context UriInfo uriInfo, @PathParam("type") String type)
+            throws Exception {
+        boolean pretty = false;
+        OpenAPI openApi = new OpenAPI();
+        openApi.addServersItem(buildOpenApiServer());
 
-		openApi = ctx.read();
-
-		if (UtilValidate.isNotEmpty(type) && type.trim().equalsIgnoreCase("yaml")) {
-			return Response.status(Response.Status.OK)
-					.entity(pretty ? Yaml.pretty(openApi) : Yaml.mapper().writeValueAsString(openApi))
-					.type("application/yaml").build();
-		} else {
-			return Response.status(Response.Status.OK)
-					.entity(pretty ? Json.pretty(openApi) : Json.mapper().writeValueAsString(openApi))
-					.type(MediaType.APPLICATION_JSON_TYPE).build();
-		}
-	}
+        SecurityScheme securitySchemeApiKey = new SecurityScheme();
+        securitySchemeApiKey.setName("api-key");
+        securitySchemeApiKey.setType(SecurityScheme.Type.APIKEY);
+        securitySchemeApiKey.setIn(SecurityScheme.In.HEADER);
+        openApi.schemaRequirement(securitySchemeApiKey.getName(), securitySchemeApiKey);
+        SwaggerConfiguration config = new SwaggerConfiguration().openAPI(openApi.info(buildOpenApiInfo()))
+                .readerClass(OFBizOpenApiReader.class.getName());
 
 
-	private Info buildOpenApiInfo() {
-		Info info = new Info().version("1.0.0").title("OFBiz REST Store")
-				.description("Open API specification for OFBiz RESTful APIs.").contact(buildOpenApiContact()).
-				termsOfService("https://ofbiz.apache.org/")
-				.license(new License()
+        OpenApiContext ctx = new GenericOpenApiContextBuilder<>().openApiConfiguration(config).buildContext(true);
+
+        openApi = ctx.read();
+
+        if (UtilValidate.isNotEmpty(type) && type.trim().equalsIgnoreCase("yaml")) {
+            return Response.status(Response.Status.OK)
+                    .entity(pretty ? Yaml.pretty(openApi) : Yaml.mapper().writeValueAsString(openApi))
+                    .type("application/yaml").build();
+        } else {
+            return Response.status(Response.Status.OK)
+                    .entity(pretty ? Json.pretty(openApi) : Json.mapper().writeValueAsString(openApi))
+                    .type(MediaType.APPLICATION_JSON_TYPE).build();
+        }
+    }
+
+
+    private Info buildOpenApiInfo() {
+        Info info = new Info().version("1.0.0").title("OFBiz REST Store")
+                .description("Open API specification for OFBiz RESTful APIs.").contact(buildOpenApiContact())
+                        .termsOfService("https://ofbiz.apache.org/")
+                .license(new License()
                         .name("Apache 2.0")
                         .url("http://www.apache.org/licenses/LICENSE-2.0.html"));
-		
-		return info;
-	}
 
-	private Contact buildOpenApiContact() {
-		Contact contact = new Contact().name("OFBiz API Team").email("ofbiz@apache.org")
-				.url("https://ofbiz.apache.org/");
-		return contact;
-	}
+        return info;
+    }
 
-	private Server buildOpenApiServer() {
-		System.out.println(request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath());
-		Server serverItem = new Server().url(request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()).description("Server Hosting the REST API");
-		return serverItem;
-	}
+    private Contact buildOpenApiContact() {
+        Contact contact = new Contact().name("OFBiz API Team").email("ofbiz@apache.org")
+                .url("https://ofbiz.apache.org/");
+        return contact;
+    }
+
+    private Server buildOpenApiServer() {
+        System.out.println(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath());
+        Server serverItem =
+                new Server().url(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath())
+                        .description("Server Hosting the REST API");
+        return serverItem;
+    }
 }

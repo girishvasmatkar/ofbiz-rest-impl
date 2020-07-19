@@ -25,25 +25,28 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import org.apache.ofbiz.ws.rs.response.Error;
 import org.apache.ofbiz.ws.rs.response.Success;
 
-public class RestApiUtil {
+public final class RestApiUtil {
 
-	public static Response success(String message, Object data) {
-		Success success = new Success(Response.Status.OK.getStatusCode(), Response.Status.OK.getReasonPhrase(), message,data);
-		return Response.status(Response.Status.OK.getStatusCode()).type(MediaType.APPLICATION_JSON).entity(success).build();
-	}
+    private RestApiUtil() {
 
-	public static Response error(int statusCode, String reasonPhrase, String message) {
-		Error error = new Error(statusCode, reasonPhrase, message);
-		return Response.status(statusCode).type(MediaType.APPLICATION_JSON).entity(error).build();
-	}
+    }
 
-	/**
-	 * 
-	 * @param message
-	 * @return
-	 */
-	public static ResponseBuilder errorBuilder(int statusCode, String reasonPhrase, String message) {
-		Error error = new Error(statusCode, reasonPhrase, message);
-		return Response.status(statusCode).type(MediaType.APPLICATION_JSON).entity(error);
-	}
+    public static Response success(String message, Object data) {
+        Success success = new Success(Response.Status.OK.getStatusCode(), Response.Status.OK.getReasonPhrase(), message, data);
+        return Response.status(Response.Status.OK.getStatusCode()).type(MediaType.APPLICATION_JSON).entity(success).build();
+    }
+
+    public static Response error(int statusCode, String reasonPhrase, String message) {
+        Error error = new Error(statusCode, reasonPhrase, message);
+        return Response.status(statusCode).type(MediaType.APPLICATION_JSON).entity(error).build();
+    }
+
+    /**
+     * @param message
+     * @return
+     */
+    public static ResponseBuilder errorBuilder(int statusCode, String reasonPhrase, String message) {
+        Error error = new Error(statusCode, reasonPhrase, message);
+        return Response.status(statusCode).type(MediaType.APPLICATION_JSON).entity(error);
+    }
 }

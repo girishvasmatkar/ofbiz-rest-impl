@@ -28,16 +28,16 @@ import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 
 public class OFBizApiConfig extends ResourceConfig {
-	public OFBizApiConfig() {
-		packages("org.apache.ofbiz.ws.rs.resources");
-		packages("org.apache.ofbiz.ws.rs.security.auth");
-		packages("org.apache.ofbiz.ws.rs.spi.impl");
-		//packages("io.swagger.v3.jaxrs2.integration.resources"); //commenting it out to generate customized OpenApi Spec
-		register(JacksonFeature.class);
-		register(MultiPartFeature.class);
-		if (Debug.verboseOn()) {
-			register(new LoggingFeature(Logger.getLogger(LoggingFeature.DEFAULT_LOGGER_NAME), Level.INFO,
-					LoggingFeature.Verbosity.PAYLOAD_ANY, 10000));
-		}
-	}
+    public OFBizApiConfig() {
+        packages("org.apache.ofbiz.ws.rs.resources");
+        packages("org.apache.ofbiz.ws.rs.security.auth");
+        packages("org.apache.ofbiz.ws.rs.spi.impl");
+        //packages("io.swagger.v3.jaxrs2.integration.resources"); //commenting it out to generate customized OpenApi Spec
+        register(JacksonFeature.class);
+        register(MultiPartFeature.class);
+        if (Debug.verboseOn()) {
+            register(new LoggingFeature(Logger.getLogger(LoggingFeature.DEFAULT_LOGGER_NAME), Level.INFO,
+                    LoggingFeature.Verbosity.PAYLOAD_ANY, 10000));
+        }
+    }
 }

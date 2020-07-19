@@ -33,24 +33,24 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 @Provider
 public class JacksonConfig implements ContextResolver<ObjectMapper> {
 
-	private final ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
-	public JacksonConfig() {
+    public JacksonConfig() {
 
-		objectMapper = new ObjectMapper();
-		objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-		objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-		objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-		SimpleModule simpleModule = new SimpleModule();
-		simpleModule.addSerializer(Link.class, new LinkSerializer());
-		objectMapper.registerModule(simpleModule);
-	}
+        objectMapper = new ObjectMapper();
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        SimpleModule simpleModule = new SimpleModule();
+        simpleModule.addSerializer(Link.class, new LinkSerializer());
+        objectMapper.registerModule(simpleModule);
+    }
 
-	@Override
-	public ObjectMapper getContext(Class<?> type) {
-		return objectMapper;
-	}
+    @Override
+    public ObjectMapper getContext(Class<?> type) {
+        return objectMapper;
+    }
 
 }

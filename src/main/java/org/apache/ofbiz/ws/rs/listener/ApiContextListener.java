@@ -29,29 +29,29 @@ import org.apache.ofbiz.webapp.WebAppUtil;
 
 public class ApiContextListener implements ServletContextListener {
 
-	public static final String MODULE = ApiContextListener.class.getName();
-	private static ServletContext servletContext;
+    public static final String MODULE = ApiContextListener.class.getName();
+    private static ServletContext servletContext;
 
-	public void contextInitialized(ServletContextEvent sce) {
-		servletContext = sce.getServletContext();
-		Delegator delegator = WebAppUtil.getDelegator(servletContext);
-		LocalDispatcher dispatcher = WebAppUtil.getDispatcher(servletContext);
-		Debug.logInfo("Api Jersey Context initialized, delegator " + delegator + ", dispatcher", MODULE);
-		servletContext.setAttribute("delegator", delegator);
-		servletContext.setAttribute("dispatcher", dispatcher);
-		servletContext.setAttribute("security", WebAppUtil.getSecurity(servletContext));
-	}
+    public void contextInitialized(ServletContextEvent sce) {
+        servletContext = sce.getServletContext();
+        Delegator delegator = WebAppUtil.getDelegator(servletContext);
+        LocalDispatcher dispatcher = WebAppUtil.getDispatcher(servletContext);
+        Debug.logInfo("Api Jersey Context initialized, delegator " + delegator + ", dispatcher", MODULE);
+        servletContext.setAttribute("delegator", delegator);
+        servletContext.setAttribute("dispatcher", dispatcher);
+        servletContext.setAttribute("security", WebAppUtil.getSecurity(servletContext));
+    }
 
-	public void contextDestroyed(ServletContextEvent sce) {
-		ServletContext context = sce.getServletContext();
-		Debug.logInfo("Api Jersey Context destroyed, removing delegator and dispatcher ", MODULE);
-		context.removeAttribute("delegator");
-		context.removeAttribute("dispatcher");
-		context.removeAttribute("security");
-		context = null;
-	}
+    public void contextDestroyed(ServletContextEvent sce) {
+        ServletContext context = sce.getServletContext();
+        Debug.logInfo("Api Jersey Context destroyed, removing delegator and dispatcher ", MODULE);
+        context.removeAttribute("delegator");
+        context.removeAttribute("dispatcher");
+        context.removeAttribute("security");
+        context = null;
+    }
 
-	public static ServletContext getApplicationCntx() {
-		return servletContext;
-	}
+    public static ServletContext getApplicationCntx() {
+        return servletContext;
+    }
 }

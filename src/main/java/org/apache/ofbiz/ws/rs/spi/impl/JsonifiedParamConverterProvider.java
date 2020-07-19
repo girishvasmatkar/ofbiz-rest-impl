@@ -34,35 +34,35 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Provider
 public class JsonifiedParamConverterProvider implements ParamConverterProvider {
-	private static final ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper mapper = new ObjectMapper();
 
-	private static ObjectMapper getMapper() {
-		return mapper;
-	}
+    private static ObjectMapper getMapper() {
+        return mapper;
+    }
 
-	@Override
-	public <T> ParamConverter<T> getConverter(Class<T> rawType, Type genericType, Annotation[] annotations) {
-		if (rawType.getName().equals(ApiServiceRequest.class.getName())) {
-			return new ParamConverter<T>() {
-				@SuppressWarnings("unchecked")
-				@Override
-				public T fromString(String value) {
-					Map<String, Object> map = null;
-					try {
-						map = getMapper().readValue(value, new TypeReference<Map<String, Object>>() {
-						});
-					} catch (JsonProcessingException e) {
-						e.printStackTrace();
-					}
-					return (T) new ApiServiceRequest(map);
-				}
+    @Override
+    public <T> ParamConverter<T> getConverter(Class<T> rawType, Type genericType, Annotation[] annotations) {
+        if (rawType.getName().equals(ApiServiceRequest.class.getName())) {
+            return new ParamConverter<T>() {
+                @SuppressWarnings("unchecked")
+                @Override
+                public T fromString(String value) {
+                    Map<String, Object> map = null;
+                    try {
+                        map = getMapper().readValue(value, new TypeReference<Map<String, Object>>() {
+                        });
+                    } catch (JsonProcessingException e) {
+                        e.printStackTrace();
+                    }
+                    return (T) new ApiServiceRequest(map);
+                }
 
-				@Override
-				public String toString(T map) {
-					return ((ApiServiceRequest) map).getInParams().toString();
-				}
-			};
-		}
-		return null;
-	}
+                @Override
+                public String toString(T map) {
+                    return ((ApiServiceRequest) map).getInParams().toString();
+                }
+            };
+        }
+        return null;
+    }
 }

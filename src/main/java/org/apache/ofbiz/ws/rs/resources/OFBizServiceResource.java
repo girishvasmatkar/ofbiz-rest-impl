@@ -58,50 +58,57 @@ import org.apache.ofbiz.ws.rs.security.Secured;
 @Provider
 public class OFBizServiceResource extends OFBizResource {
 
-	@Context
-	UriInfo uriInfo;
+    @Context
+    UriInfo uriInfo;
 
-	@Context
-	private HttpServletRequest httpRequest;
+    @Context
+    private HttpServletRequest httpRequest;
 
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response serviceList() throws GenericServiceException {
-		LocalDispatcher dispatcher = getDispatcher();
-		DispatchContext context = dispatcher.getDispatchContext();
-		Set<String> serviceNames = context.getAllServiceNames();
-		List<Map<String, Object>> serviceList = new ArrayList<>();
-		for (String serviceName : serviceNames) {
-			ModelService service = context.getModelService(serviceName);
-			if (service != null && service.export && UtilValidate.isNotEmpty(service.action)) {
-				Map<String, Object> serviceMap = new LinkedHashMap<String, Object>();
-				serviceMap.put("name", service.name);
-				serviceMap.put("description", service.description);
-				Link selfLink = Link.fromUriBuilder(uriInfo.getAbsolutePathBuilder().path(service.name)).type(service.action).rel("self").build();
-				serviceMap.put("link", selfLink);
-				serviceList.add(serviceMap);
-			}
-		}
-		Success success = new Success(Response.Status.OK.getStatusCode(), Response.Status.OK.getReasonPhrase(), Response.Status.OK.getReasonPhrase(), serviceList);
-		return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(success).build();
-	}
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response serviceList() throws GenericServiceException {
+        LocalDispatcher dispatcher = getDispatcher();
+        DispatchContext context = dispatcher.getDispatchContext();
+        Set<String> serviceNames = context.getAllServiceNames();
+        List<Map<String, Object>> serviceList = new ArrayList<>();
+        for (String serviceName : serviceNames) {
+            ModelService service = context.getModelService(serviceName);
+            if (service != null && service.export && UtilValidate.isNotEmpty(service.action)) {
+                Map<String, Object> serviceMap = new LinkedHashMap<String, Object>();
+                serviceMap.put("name", service.name);
+                serviceMap.put("description", service.description);
+                Link selfLink = Link.fromUriBuilder(uriInfo.getAbsolutePathBuilder().path(service.name)).type(service.action).rel("self").build();
+                serviceMap.put("link", selfLink);
+                serviceList.add(serviceMap);
+            }
+        }
+        Success success = new Success(Response.Status.OK.getStatusCode(), Response.Status.OK.getReasonPhrase(), Response.Status.OK.getReasonPhrase(),
+                serviceList);
+        return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(success).build();
+    }
 
-	@GET
-	@Path("/{serviceName}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Secured
-	public Response invokeServiceByGet(@QueryParam(value = "inParams") ApiServiceRequest serviceRequest, @PathParam(value = "serviceName") String serviceName) throws IOException, GenericServiceException {
-		ServiceRequestProcessor processor = new ServiceRequestProcessor();
-		return processor.process(UtilMisc.toMap("serviceName", serviceName, "httpVerb", HttpMethod.GET, "requestMap", serviceRequest.getInParams(), "dispatcher", dispatcher, "request", httpRequest));
+    @GET
+    @Path("/{serviceName}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Secured
+    public Response invokeServiceByGet(@QueryParam(value = "inParams") ApiServiceRequest serviceRequest,
+                                       @PathParam(value = "serviceName") String serviceName) throws IOException, GenericServiceException {
+        ServiceRequestProcessor processor = new ServiceRequestProcessor();
+        return processor.process(
+                UtilMisc.toMap("serviceName", serviceName, "httpVerb", HttpMethod.GET, "requestMap", serviceRequest.getInParams(), "dispatcher",
+                        dispatcher, "request", httpRequest));
 
-	}
+    }
 
-	@POST
-	@Path("/{serviceName}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response invokeServiceByPost(HashMap<String, Object> serviceInParams, @PathParam(value = "serviceName") String serviceName) throws IOException, GenericEntityException, GenericServiceException {
-		ServiceRequestProcessor processor = new ServiceRequestProcessor();
-		return processor.process(UtilMisc.toMap("serviceName", serviceName, "httpVerb", HttpMethod.POST, "requestMap", serviceInParams, "dispatcher", dispatcher, "request", httpRequest));
+    @POST
+    @Path("/{serviceName}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response invokeServiceByPost(HashMap<String, Object> serviceInParams, @PathParam(value = "serviceName") String serviceName)
+            throws IOException, GenericEntityException, GenericServiceException {
+        ServiceRequestProcessor processor = new ServiceRequestProcessor();
+        return processor.process(
+                UtilMisc.toMap("serviceName", serviceName, "httpVerb", HttpMethod.POST, "requestMap", serviceInParams, "dispatcher", dispatcher,
+                        "request", httpRequest));
 
-	}
+    }
 }
