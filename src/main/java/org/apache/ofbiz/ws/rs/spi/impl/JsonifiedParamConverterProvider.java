@@ -34,12 +34,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Provider
 public class JsonifiedParamConverterProvider implements ParamConverterProvider {
-    private static final ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     private static ObjectMapper getMapper() {
-        return mapper;
+        return MAPPER;
     }
 
+    /**
+     *
+     */
     @Override
     public <T> ParamConverter<T> getConverter(Class<T> rawType, Type genericType, Annotation[] annotations) {
         if (rawType.getName().equals(ApiServiceRequest.class.getName())) {

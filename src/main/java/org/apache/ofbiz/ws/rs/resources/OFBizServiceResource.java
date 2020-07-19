@@ -59,11 +59,15 @@ import org.apache.ofbiz.ws.rs.security.Secured;
 public class OFBizServiceResource extends OFBizResource {
 
     @Context
-    UriInfo uriInfo;
+    private UriInfo uriInfo;
 
     @Context
     private HttpServletRequest httpRequest;
 
+    /**
+     * @return
+     * @throws GenericServiceException
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response serviceList() throws GenericServiceException {
@@ -87,6 +91,13 @@ public class OFBizServiceResource extends OFBizResource {
         return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(success).build();
     }
 
+    /**
+     * @param serviceRequest
+     * @param serviceName
+     * @return
+     * @throws IOException
+     * @throws GenericServiceException
+     */
     @GET
     @Path("/{serviceName}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -96,10 +107,18 @@ public class OFBizServiceResource extends OFBizResource {
         ServiceRequestProcessor processor = new ServiceRequestProcessor();
         return processor.process(
                 UtilMisc.toMap("serviceName", serviceName, "httpVerb", HttpMethod.GET, "requestMap", serviceRequest.getInParams(), "dispatcher",
-                        dispatcher, "request", httpRequest));
+                        getDispatcher(), "request", httpRequest));
 
     }
 
+    /**
+     * @param serviceInParams
+     * @param serviceName
+     * @return
+     * @throws IOException
+     * @throws GenericEntityException
+     * @throws GenericServiceException
+     */
     @POST
     @Path("/{serviceName}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -107,7 +126,7 @@ public class OFBizServiceResource extends OFBizResource {
             throws IOException, GenericEntityException, GenericServiceException {
         ServiceRequestProcessor processor = new ServiceRequestProcessor();
         return processor.process(
-                UtilMisc.toMap("serviceName", serviceName, "httpVerb", HttpMethod.POST, "requestMap", serviceInParams, "dispatcher", dispatcher,
+                UtilMisc.toMap("serviceName", serviceName, "httpVerb", HttpMethod.POST, "requestMap", serviceInParams, "dispatcher", getDispatcher(),
                         "request", httpRequest));
 
     }

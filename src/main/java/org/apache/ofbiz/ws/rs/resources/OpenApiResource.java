@@ -49,18 +49,18 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
 
 @Path("/openapi.{type:json|yaml}")
-public class OpenApiResource {
+public final class OpenApiResource {
     @Context
-    ServletConfig config;
+    private ServletConfig config;
 
     @Context
-    ServletContext context;
+    private ServletContext context;
 
     @Context
-    HttpServletRequest request;
+    private HttpServletRequest request;
 
     @Context
-    Application app;
+    private Application app;
 
     @GET
     @Produces({MediaType.APPLICATION_JSON, "application/yaml"})
@@ -99,7 +99,7 @@ public class OpenApiResource {
     private Info buildOpenApiInfo() {
         Info info = new Info().version("1.0.0").title("OFBiz REST Store")
                 .description("Open API specification for OFBiz RESTful APIs.").contact(buildOpenApiContact())
-                        .termsOfService("https://ofbiz.apache.org/")
+                .termsOfService("https://ofbiz.apache.org/")
                 .license(new License()
                         .name("Apache 2.0")
                         .url("http://www.apache.org/licenses/LICENSE-2.0.html"));

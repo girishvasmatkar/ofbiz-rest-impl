@@ -27,6 +27,9 @@ import org.apache.ofbiz.ws.rs.spi.AbstractExceptionMapper;
 @Provider
 public class GlobalExceptionMapper extends AbstractExceptionMapper implements javax.ws.rs.ext.ExceptionMapper<Throwable> {
 
+    /**
+     *
+     */
     @Override
     public Response toResponse(Throwable throwable) {
         throwable.printStackTrace();

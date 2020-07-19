@@ -38,6 +38,12 @@ import org.apache.ofbiz.ws.rs.util.RestApiUtil;
 
 public class ServiceRequestProcessor {
 
+    /**
+     * @param requestContext
+     * @return
+     * @throws GenericServiceException
+     */
+    @SuppressWarnings("unchecked")
     public Response process(Map<String, Object> requestContext) throws GenericServiceException {
         String serviceName = (String) requestContext.get("serviceName");
         String httpVerb = (String) requestContext.get("httpVerb");

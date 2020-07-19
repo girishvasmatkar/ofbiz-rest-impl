@@ -32,10 +32,10 @@ import org.apache.ofbiz.service.LocalDispatcher;
 public abstract class OFBizResource implements IOFBizResource {
 
     @Context
-    protected ServletContext servletContext;
+    private ServletContext servletContext;
 
-    protected Delegator delegator = getDelegator();
+    private Delegator delegator = getDelegator();
 
-    protected LocalDispatcher dispatcher = getDispatcher();
+    private LocalDispatcher dispatcher = getDispatcher();
 
 }

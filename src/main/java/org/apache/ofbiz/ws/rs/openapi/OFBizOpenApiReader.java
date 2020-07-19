@@ -57,7 +57,7 @@ import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.responses.ApiResponses;
 import io.swagger.v3.oas.models.tags.Tag;
 
-public class OFBizOpenApiReader implements OpenApiReader {
+public final class OFBizOpenApiReader implements OpenApiReader {
 
     private OpenAPIConfiguration openApiConfiguration;
     private Components components;

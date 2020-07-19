@@ -33,69 +33,70 @@ public final class OpenApiUtil {
     private OpenApiUtil() {
 
     }
-    private static final Map<String, String> classAlias = new HashMap<>();
-    private static final Map<String, Class<?>> javaToOpenAPiMap = new HashMap<>();
+
+    private static final Map<String, String> CLASS_ALIAS = new HashMap<>();
+    private static final Map<String, Class<?>> JAVA_OPEN_API_MAP = new HashMap<>();
 
     static {
-        classAlias.put("String", "String");
-        classAlias.put("java.lang.String", "String");
-        classAlias.put("CharSequence", "String");
-        classAlias.put("java.lang.CharSequence", "String");
-        classAlias.put("Date", "String");
-        classAlias.put("java.sql.Date", "String");
-        classAlias.put("Time", "String");
-        classAlias.put("java.sql.Time", "String");
-        classAlias.put("Timestamp", "Timestamp");
-        classAlias.put("java.sql.Timestamp", "Timestamp");
-        classAlias.put("Integer", "Int");
-        classAlias.put("java.lang.Integer", "Int");
-        classAlias.put("Long", "Long");
-        classAlias.put("java.lang.Long", "Long");
-        classAlias.put("BigInteger", "BigInteger");
-        classAlias.put("java.math.BigInteger", "BigInteger");
-        classAlias.put("Float", "Float");
-        classAlias.put("java.lang.Float", "Float");
-        classAlias.put("Double", "Float");
-        classAlias.put("java.lang.Double", "Float");
-        classAlias.put("BigDecimal", "BigDecimal");
-        classAlias.put("java.math.BigDecimal", "BigDecimal");
-        classAlias.put("Boolean", "Boolean");
-        classAlias.put("java.lang.Boolean", "Boolean");
+        CLASS_ALIAS.put("String", "String");
+        CLASS_ALIAS.put("java.lang.String", "String");
+        CLASS_ALIAS.put("CharSequence", "String");
+        CLASS_ALIAS.put("java.lang.CharSequence", "String");
+        CLASS_ALIAS.put("Date", "String");
+        CLASS_ALIAS.put("java.sql.Date", "String");
+        CLASS_ALIAS.put("Time", "String");
+        CLASS_ALIAS.put("java.sql.Time", "String");
+        CLASS_ALIAS.put("Timestamp", "Timestamp");
+        CLASS_ALIAS.put("java.sql.Timestamp", "Timestamp");
+        CLASS_ALIAS.put("Integer", "Int");
+        CLASS_ALIAS.put("java.lang.Integer", "Int");
+        CLASS_ALIAS.put("Long", "Long");
+        CLASS_ALIAS.put("java.lang.Long", "Long");
+        CLASS_ALIAS.put("BigInteger", "BigInteger");
+        CLASS_ALIAS.put("java.math.BigInteger", "BigInteger");
+        CLASS_ALIAS.put("Float", "Float");
+        CLASS_ALIAS.put("java.lang.Float", "Float");
+        CLASS_ALIAS.put("Double", "Float");
+        CLASS_ALIAS.put("java.lang.Double", "Float");
+        CLASS_ALIAS.put("BigDecimal", "BigDecimal");
+        CLASS_ALIAS.put("java.math.BigDecimal", "BigDecimal");
+        CLASS_ALIAS.put("Boolean", "Boolean");
+        CLASS_ALIAS.put("java.lang.Boolean", "Boolean");
 
-        classAlias.put("org.apache.ofbiz.entity.GenericValue", "GenericValue");
-        classAlias.put("GenericValue", "GenericValue");
-        classAlias.put("GenericPK", "GenericPK");
-        classAlias.put("org.apache.ofbiz.entity.GenericPK", "GenericPK");
-        classAlias.put("org.apache.ofbiz.entity.GenericEntity", "GenericEntity");
-        classAlias.put("GenericEntity", "GenericEntity");
+        CLASS_ALIAS.put("org.apache.ofbiz.entity.GenericValue", "GenericValue");
+        CLASS_ALIAS.put("GenericValue", "GenericValue");
+        CLASS_ALIAS.put("GenericPK", "GenericPK");
+        CLASS_ALIAS.put("org.apache.ofbiz.entity.GenericPK", "GenericPK");
+        CLASS_ALIAS.put("org.apache.ofbiz.entity.GenericEntity", "GenericEntity");
+        CLASS_ALIAS.put("GenericEntity", "GenericEntity");
 
-        classAlias.put("java.util.List", "List");
-        classAlias.put("List", "List");
-        classAlias.put("java.util.Set", "Set");
-        classAlias.put("Set", "Set");
-        classAlias.put("java.util.Map", "Map");
-        classAlias.put("Map", "Map");
-        classAlias.put("java.util.HashMap", "HashMap");
-        classAlias.put("HashMap", "HashMap");
+        CLASS_ALIAS.put("java.util.List", "List");
+        CLASS_ALIAS.put("List", "List");
+        CLASS_ALIAS.put("java.util.Set", "Set");
+        CLASS_ALIAS.put("Set", "Set");
+        CLASS_ALIAS.put("java.util.Map", "Map");
+        CLASS_ALIAS.put("Map", "Map");
+        CLASS_ALIAS.put("java.util.HashMap", "HashMap");
+        CLASS_ALIAS.put("HashMap", "HashMap");
 
-        javaToOpenAPiMap.put("String", StringSchema.class);
-        javaToOpenAPiMap.put("Integer", IntegerSchema.class);
-        javaToOpenAPiMap.put("Long", IntegerSchema.class);
-        javaToOpenAPiMap.put("Map", MapSchema.class);
-        javaToOpenAPiMap.put("GenericEntity", MapSchema.class);
-        javaToOpenAPiMap.put("GenericPK", MapSchema.class);
-        javaToOpenAPiMap.put("GenericValue", MapSchema.class);
-        javaToOpenAPiMap.put("HashMap", MapSchema.class);
-        javaToOpenAPiMap.put("List", ArraySchema.class);
-        javaToOpenAPiMap.put("Float", NumberSchema.class);
-        javaToOpenAPiMap.put("Double", NumberSchema.class);
-        javaToOpenAPiMap.put("BigDecimal", NumberSchema.class);
-        javaToOpenAPiMap.put("Timestamp", DateSchema.class);
+        JAVA_OPEN_API_MAP.put("String", StringSchema.class);
+        JAVA_OPEN_API_MAP.put("Integer", IntegerSchema.class);
+        JAVA_OPEN_API_MAP.put("Long", IntegerSchema.class);
+        JAVA_OPEN_API_MAP.put("Map", MapSchema.class);
+        JAVA_OPEN_API_MAP.put("GenericEntity", MapSchema.class);
+        JAVA_OPEN_API_MAP.put("GenericPK", MapSchema.class);
+        JAVA_OPEN_API_MAP.put("GenericValue", MapSchema.class);
+        JAVA_OPEN_API_MAP.put("HashMap", MapSchema.class);
+        JAVA_OPEN_API_MAP.put("List", ArraySchema.class);
+        JAVA_OPEN_API_MAP.put("Float", NumberSchema.class);
+        JAVA_OPEN_API_MAP.put("Double", NumberSchema.class);
+        JAVA_OPEN_API_MAP.put("BigDecimal", NumberSchema.class);
+        JAVA_OPEN_API_MAP.put("Timestamp", DateSchema.class);
 
     }
 
 
     public static Class<?> getOpenApiSchema(String type) {
-        return javaToOpenAPiMap.get(classAlias.get(type));
+        return JAVA_OPEN_API_MAP.get(CLASS_ALIAS.get(type));
     }
 }

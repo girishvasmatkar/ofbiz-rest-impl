@@ -32,6 +32,9 @@ public class ApiContextListener implements ServletContextListener {
     public static final String MODULE = ApiContextListener.class.getName();
     private static ServletContext servletContext;
 
+    /**
+     *
+     */
     public void contextInitialized(ServletContextEvent sce) {
         servletContext = sce.getServletContext();
         Delegator delegator = WebAppUtil.getDelegator(servletContext);
@@ -42,6 +45,9 @@ public class ApiContextListener implements ServletContextListener {
         servletContext.setAttribute("security", WebAppUtil.getSecurity(servletContext));
     }
 
+    /**
+     *
+     */
     public void contextDestroyed(ServletContextEvent sce) {
         ServletContext context = sce.getServletContext();
         Debug.logInfo("Api Jersey Context destroyed, removing delegator and dispatcher ", MODULE);

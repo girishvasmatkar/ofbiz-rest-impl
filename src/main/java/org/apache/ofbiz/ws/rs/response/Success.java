@@ -28,7 +28,7 @@ public class Success {
     private int statusCode;
     private String statusDescription;
     private String successMessage;
-    protected Object data;
+    private Object data;
 
     public Success(int statusCode, String statusDescription, String successMessage, Object data) {
         this.statusCode = statusCode;
@@ -37,35 +37,60 @@ public class Success {
         this.data = data;
     }
 
+    /**
+     * @return the statusCode
+     */
     public int getStatusCode() {
         return statusCode;
     }
 
+    /**
+     * @param statusCode the statusCode to set
+     */
     public void setStatusCode(int statusCode) {
         this.statusCode = statusCode;
     }
 
+    /**
+     * @return the statusDescription
+     */
     public String getStatusDescription() {
         return statusDescription;
     }
 
+    /**
+     * @param statusDescription the statusDescription to set
+     */
     public void setStatusDescription(String statusDescription) {
         this.statusDescription = statusDescription;
     }
 
+    /**
+     * @return the successMessage
+     */
     public String getSuccessMessage() {
         return successMessage;
     }
 
+    /**
+     * @param successMessage the successMessage to set
+     */
     public void setSuccessMessage(String successMessage) {
         this.successMessage = successMessage;
     }
 
+    /**
+     * @return the data
+     */
     public Object getData() {
         return data;
     }
 
+    /**
+     * @param data the data to set
+     */
     public void setData(Object data) {
         this.data = data;
     }
+
 }

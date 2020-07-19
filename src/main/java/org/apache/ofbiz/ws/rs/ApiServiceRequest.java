@@ -20,7 +20,7 @@ package org.apache.ofbiz.ws.rs;
 
 import java.util.Map;
 
-public class ApiServiceRequest {
+public final class ApiServiceRequest {
     private Map<String, Object> inParams;
 
     public Map<String, Object> getInParams() {

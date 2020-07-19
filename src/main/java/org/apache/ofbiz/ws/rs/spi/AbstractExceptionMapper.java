@@ -28,14 +28,29 @@ import org.apache.ofbiz.ws.rs.response.Error;
  *
  */
 public class AbstractExceptionMapper {
+    /**
+     * @param status
+     * @param responseEntity
+     * @return
+     */
     protected Response errorResponse(int status, Error responseEntity) {
         return customizeResponse(status, responseEntity);
     }
 
+    /**
+     * @param status
+     * @param responseEntity
+     * @param t
+     * @return
+     */
     protected Response errorResponse(int status, Error responseEntity, Throwable t) {
         return customizeResponse(status, responseEntity);
     }
 
+    /**
+     * @param ex
+     * @return
+     */
     protected Response.StatusType getStatusType(Throwable ex) {
         if (ex instanceof WebApplicationException) {
             return ((WebApplicationException) ex).getResponse().getStatusInfo();
@@ -44,6 +59,11 @@ public class AbstractExceptionMapper {
         }
     }
 
+    /**
+     * @param status
+     * @param responseEntity
+     * @return
+     */
     private Response customizeResponse(int status, Error responseEntity) {
         return Response.status(status).entity(responseEntity).type(MediaType.APPLICATION_JSON).build();
     }

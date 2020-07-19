@@ -63,6 +63,9 @@ public class APIAuthFilter implements ContainerRequestFilter {
     private static final String AUTHENTICATION_SCHEME = "Bearer";
     private static final String REALM = "OFBiz";
 
+    /**
+     *
+     */
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
         String authorizationHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);

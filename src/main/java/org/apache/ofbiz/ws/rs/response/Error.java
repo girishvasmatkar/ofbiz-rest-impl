@@ -43,31 +43,60 @@ public class Error {
         this.additionalErrors = additionalErrors;
     }
 
+    /**
+     * @return the statusCode
+     */
     public int getStatusCode() {
         return statusCode;
     }
 
-    public List<String> getAdditionalErrors() {
-        return additionalErrors;
-    }
-
+    /**
+     * @param statusCode the statusCode to set
+     */
     public void setStatusCode(int statusCode) {
         this.statusCode = statusCode;
     }
 
+    /**
+     * @return the statusDescription
+     */
     public String getStatusDescription() {
         return statusDescription;
     }
 
+    /**
+     * @param statusDescription the statusDescription to set
+     */
     public void setStatusDescription(String statusDescription) {
         this.statusDescription = statusDescription;
     }
 
+    /**
+     * @return the errorMessage
+     */
     public String getErrorMessage() {
         return errorMessage;
     }
 
+    /**
+     * @param errorMessage the errorMessage to set
+     */
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
     }
+
+    /**
+     * @return the additionalErrors
+     */
+    public List<String> getAdditionalErrors() {
+        return additionalErrors;
+    }
+
+    /**
+     * @param additionalErrors the additionalErrors to set
+     */
+    public void setAdditionalErrors(List<String> additionalErrors) {
+        this.additionalErrors = additionalErrors;
+    }
+
 }
