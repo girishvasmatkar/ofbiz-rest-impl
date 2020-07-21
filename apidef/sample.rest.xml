@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api>
+	<resource name="supplierResource" description="Supplier Related Operations" path="/suppliers">
+		<method type="get" consumes="json" produces="json">
+			<service name="getAllSuppliers" />
+		</method>
+		<method type="post" consumes="xml" produces="xml">
+			<service name="addNewSupplier" />
+		</method>
+		<method type="get" path="/{supplierId}">
+			<service name="getSpecificSupplier" />
+		</method>
+		<method type="get" consumes="json" produces="json" path="/{supplierId}/contacts">
+				<service name="getSpecificSupplierAllContacts" />
+	    </method>
+	    <method type="post" consumes="xml" produces="xml" path="/{supplierId}/contacts">
+				<service name="addNewSupplierContact" />
+		</method>
+		<method type="get" path="/{supplierId}/contacts/{contactMechId}">
+				<service name="getSpecificSupplierSpecificContact" />
+		</method>
+	</resource>
+	<resource name="exportResource" description="Export Resource" path="/export">
+		<method type="post" consumes="json" produces="json" path="zip">
+			<service name="exportZip" />
+		</method>
+		<method type="get" consumes="xml" produces="xml" path="list">
+			<service name="getExportListing" />
+		</method>
+	</resource>
+</api>
