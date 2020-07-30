@@ -157,21 +157,20 @@ public final class OpenApiUtil {
         parentSchema.setDescription("In Schema for service: " + service.name + " request");
         parentSchema.setType("object");
         service.getInParamNamesMap().forEach((name, type) -> {
-            parentSchema.addProperties(name, getAttributeSchema(service, service.getParam(name)));
+            Schema<?> attrSchema = getAttributeSchema(service, service.getParam(name));
+            if (attrSchema != null) {
+                parentSchema.addProperties(name, getAttributeSchema(service, service.getParam(name)));
+            }
         });
         return parentSchema;
     }
 
     private static Schema<?> getAttributeSchema(ModelService service, ModelParam param) {
-        Debug.log(
-                "Attribute '" + param.name + "' and type '" + param.type + "'",
-                MODULE);
         Schema<?> schema = null;
         Class<?> schemaClass = getOpenApiTypeForAttributeType(param.type);
         if (schemaClass == null) {
-            Debug.logWarning(
-                    "Attribute '" + param.name + "' ignored as it is declared as '" + param.type + "' and corresponding OpenApi Type Mapping not found.",
-                    MODULE);
+            Debug.logWarning("Attribute '" + param.name + "' ignored as it is declared as '" + param.type
+                    + "' and corresponding OpenApi Type Mapping not found.", MODULE);
             return null;
         }
         try {

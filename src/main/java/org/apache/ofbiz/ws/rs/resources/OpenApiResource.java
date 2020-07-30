@@ -114,7 +114,6 @@ public final class OpenApiResource {
     }
 
     private Server buildOpenApiServer() {
-        System.out.println(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath());
         Server serverItem =
                 new Server().url(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath())
                         .description("Server Hosting the REST API");
