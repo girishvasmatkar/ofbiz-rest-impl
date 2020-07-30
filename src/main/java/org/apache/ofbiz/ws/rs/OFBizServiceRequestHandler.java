@@ -62,6 +62,7 @@ public class OFBizServiceRequestHandler implements Inflector<ContainerRequestCon
 	public Response apply(final ContainerRequestContext data) { 
 		System.out.println("serviceName to be invked: " + serviceName);
 		ResourceMethod resM = extendedUriInfo.getMatchedResourceMethod();
+		System.out.println("Resource : "+resM.getParent());
 		if (resM != null) {
 			System.out.println("Produced Type: " + resM.getProducedTypes().get(0));
 		}

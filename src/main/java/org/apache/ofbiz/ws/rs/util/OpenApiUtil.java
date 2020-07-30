@@ -19,16 +19,32 @@
 package org.apache.ofbiz.ws.rs.util;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.ofbiz.base.util.Debug;
+import org.apache.ofbiz.base.util.UtilValidate;
+import org.apache.ofbiz.entity.Delegator;
+import org.apache.ofbiz.entity.model.ModelEntity;
+import org.apache.ofbiz.entity.model.ModelField;
+import org.apache.ofbiz.service.ModelParam;
+import org.apache.ofbiz.service.ModelService;
+import org.apache.ofbiz.webapp.WebAppUtil;
+import org.apache.ofbiz.ws.rs.listener.ApiContextListener;
+
 import io.swagger.v3.oas.models.media.ArraySchema;
+import io.swagger.v3.oas.models.media.BooleanSchema;
 import io.swagger.v3.oas.models.media.DateSchema;
 import io.swagger.v3.oas.models.media.IntegerSchema;
 import io.swagger.v3.oas.models.media.MapSchema;
 import io.swagger.v3.oas.models.media.NumberSchema;
+import io.swagger.v3.oas.models.media.ObjectSchema;
+import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.media.StringSchema;
 
 public final class OpenApiUtil {
+
+    private static final String MODULE = OpenApiUtil.class.getName();
 
     private OpenApiUtil() {
 
@@ -36,6 +52,7 @@ public final class OpenApiUtil {
 
     private static final Map<String, String> CLASS_ALIAS = new HashMap<>();
     private static final Map<String, Class<?>> JAVA_OPEN_API_MAP = new HashMap<>();
+    private static final Map<String, String> FIELD_TYPE_MAP = new HashMap<String, String>();
 
     static {
         CLASS_ALIAS.put("String", "String");
@@ -82,21 +99,212 @@ public final class OpenApiUtil {
         JAVA_OPEN_API_MAP.put("String", StringSchema.class);
         JAVA_OPEN_API_MAP.put("Integer", IntegerSchema.class);
         JAVA_OPEN_API_MAP.put("Long", IntegerSchema.class);
+        JAVA_OPEN_API_MAP.put("Boolean", BooleanSchema.class);
         JAVA_OPEN_API_MAP.put("Map", MapSchema.class);
         JAVA_OPEN_API_MAP.put("GenericEntity", MapSchema.class);
         JAVA_OPEN_API_MAP.put("GenericPK", MapSchema.class);
         JAVA_OPEN_API_MAP.put("GenericValue", MapSchema.class);
         JAVA_OPEN_API_MAP.put("HashMap", MapSchema.class);
         JAVA_OPEN_API_MAP.put("List", ArraySchema.class);
+        JAVA_OPEN_API_MAP.put("Set", ArraySchema.class);
+        JAVA_OPEN_API_MAP.put("Collection", ArraySchema.class);
         JAVA_OPEN_API_MAP.put("Float", NumberSchema.class);
         JAVA_OPEN_API_MAP.put("Double", NumberSchema.class);
         JAVA_OPEN_API_MAP.put("BigDecimal", NumberSchema.class);
+        JAVA_OPEN_API_MAP.put("BigInteger", IntegerSchema.class);
         JAVA_OPEN_API_MAP.put("Timestamp", DateSchema.class);
+        
+        
+        
+        FIELD_TYPE_MAP.put("id", "String");
+        FIELD_TYPE_MAP.put("indicator", "String");
+        FIELD_TYPE_MAP.put("date", "String");
+        FIELD_TYPE_MAP.put("id-vlong", "String");
+        FIELD_TYPE_MAP.put("description", "String");
+        FIELD_TYPE_MAP.put("numeric", "Int"); //
+        FIELD_TYPE_MAP.put("long-varchar", "String");
+        FIELD_TYPE_MAP.put("id-long", "String");
+        FIELD_TYPE_MAP.put("currency-amount", "BigDecimal");
+        FIELD_TYPE_MAP.put("value", "value");
+        FIELD_TYPE_MAP.put("email", "String");
+        FIELD_TYPE_MAP.put("currency-precise", "BigDecimal");
+        FIELD_TYPE_MAP.put("very-short", "String");
+        FIELD_TYPE_MAP.put("date-time", "Timestamp");
+        FIELD_TYPE_MAP.put("credit-card-date", "String");
+        FIELD_TYPE_MAP.put("url", "String");
+        FIELD_TYPE_MAP.put("credit-card-number", "String");
+        FIELD_TYPE_MAP.put("fixed-point", "BigDecimal");
+        FIELD_TYPE_MAP.put("name", "String");
+        FIELD_TYPE_MAP.put("short-varchar", "String");
+        FIELD_TYPE_MAP.put("comment", "String");
+        FIELD_TYPE_MAP.put("time", "String");
+        FIELD_TYPE_MAP.put("very-long", "String");
+        FIELD_TYPE_MAP.put("floating-point", "Float");
+        FIELD_TYPE_MAP.put("object", "Byte");
+        FIELD_TYPE_MAP.put("byte-array", "Byte");
+        FIELD_TYPE_MAP.put("blob", "Byte");
+        
 
     }
 
-
-    public static Class<?> getOpenApiSchema(String type) {
-        return JAVA_OPEN_API_MAP.get(CLASS_ALIAS.get(type));
+    public static Class<?> getOpenApiTypeForAttributeType(String attributeType) {
+        return JAVA_OPEN_API_MAP.get(CLASS_ALIAS.get(attributeType));
     }
+    
+    public static Class<?> getOpenApiTypeForFieldType(String fieldType) {
+        return JAVA_OPEN_API_MAP.get(FIELD_TYPE_MAP.get(fieldType));
+    }
+
+    public static Schema<Object> getInSchema(ModelService service) {
+        Schema<Object> parentSchema = new Schema<Object>();
+        parentSchema.setDescription("In Schema for service: " + service.name + " request");
+        parentSchema.setType("object");
+        service.getInParamNamesMap().forEach((name, type) -> {
+            System.out.println("Name: " + name + ", Type: " + type);
+            Schema<?> schema = null;
+            Class<?> schemaClass = getOpenApiTypeForAttributeType(type);
+            if (schemaClass == null) {
+                return;
+            }
+            try {
+                schema = (Schema<?>) schemaClass.newInstance();
+            } catch (InstantiationException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+
+            if (schema instanceof ArraySchema) {
+                ModelParam param = service.getParam(name);
+            } else if (schema instanceof MapSchema) {
+                ModelParam param = service.getParam(name);
+                if (isTypeGenericEntityOrGenericValue(type)) {
+                    if (UtilValidate.isEmpty(param.entityName)) {
+                        Debug.logWarning(
+                                "Attribute '" + param.name + "' ignored as it is declared as '" + type + "' but does not have entity-name defined.",
+                                MODULE);
+                        return;
+                    } else {
+                        Delegator delegator = WebAppUtil.getDelegator(ApiContextListener.getApplicationCntx());
+                        //ObjectSchema entitySchema = getSchemaForEntity(delegator.getModelEntity(param.entityName));
+                        Schema<?> entitySchema = getSchemaForEntity(delegator.getModelEntity(param.entityName));
+                        parentSchema.addProperties(name, entitySchema);
+                    }
+                } else if (UtilValidate.isEmpty(param.getChildList())) {
+                    Debug.logWarning(
+                            "Attribute '" + param.name + "' ignored as it is declared as '" + type + "' but does not have any child attributes.",
+                            MODULE);
+                    return;
+                }else {
+                    List<ModelParam> children = param.getChildList();
+                    
+                }
+
+            } else {
+                parentSchema.addProperties(name, schema.description(name));
+            }
+
+        });
+        return parentSchema;
+    }
+    
+    private static Schema<?> getAttributeSchema(ModelService service, ModelParam param) {
+        System.out.println("Name: " + param.name + ", Type: " + param.type);
+        Schema<?> schema = null;
+        Class<?> schemaClass = getOpenApiTypeForAttributeType(param.type);
+        if (schemaClass == null) {
+            return null;
+        }
+        try {
+            schema = (Schema<?>) schemaClass.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        if (schema instanceof ArraySchema) {
+           // ModelParam param = service.getParam(param.name);
+        } else if (schema instanceof MapSchema) {
+            //ModelParam param = service.getParam(name);
+            if (isTypeGenericEntityOrGenericValue(param.type)) {
+                if (UtilValidate.isEmpty(param.entityName)) {
+                    Debug.logWarning(
+                            "Attribute '" + param.name + "' ignored as it is declared as '" + param.type + "' but does not have entity-name defined.",
+                            MODULE);
+                    return null;
+                } else {
+                    Delegator delegator = WebAppUtil.getDelegator(ApiContextListener.getApplicationCntx());
+                    //ObjectSchema entitySchema = getSchemaForEntity(delegator.getModelEntity(param.entityName));
+                    schema = getSchemaForEntity(delegator.getModelEntity(param.entityName));
+                    //parentSchema.addProperties(name, entitySchema);
+                }
+            } else if (UtilValidate.isEmpty(param.getChildList())) {
+                Debug.logWarning(
+                        "Attribute '" + param.name + "' ignored as it is declared as '" + param.type + "' but does not have any child attributes.",
+                        MODULE);
+                return null;
+            }else {
+                List<ModelParam> children = param.getChildList();
+                
+            }
+
+        } 
+        return schema; 
+    }
+    
+
+    public static Schema<Object> getOutSchema(ModelService service) {
+        Schema<Object> parentSchema = new Schema<Object>();
+        parentSchema.setDescription("Out Schema for service: " + service.name + " response");
+        parentSchema.setType("object");
+        parentSchema.addProperties("statusCode", new IntegerSchema().description("HTTP Status Code"));
+        parentSchema.addProperties("statusDescription", new StringSchema().description("HTTP Status Code Description"));
+        parentSchema.addProperties("successMessage", new StringSchema().description("Success Message"));
+        ObjectSchema dataSchema = new ObjectSchema();
+        parentSchema.addProperties("data", dataSchema);
+        service.getOutParamNamesMap().forEach((name, type) -> {
+            Schema<?> schema = null;
+            Class<?> schemaClass = getOpenApiTypeForAttributeType(type);
+            if (schemaClass == null) {
+                return;
+            }
+            try {
+                schema = (Schema<?>) schemaClass.newInstance();
+            } catch (InstantiationException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+            if (schema instanceof ArraySchema) {
+                ArraySchema arraySchema = (ArraySchema) schema;
+                arraySchema.items(new StringSchema());
+            }
+            dataSchema.addProperties(name, schema.description(name));
+        });
+        return parentSchema;
+    }
+
+    private static boolean isTypeGenericEntityOrGenericValue(String type) {
+        if (type == null) {
+            return false;
+        }
+        return type.matches("org.apache.ofbiz.entity.GenericValue|GenericValue|org.apache.ofbiz.entity.GenericEntity|GenericEntity");
+    }
+
+    private static Schema<?> getSchemaForEntity(ModelEntity entity) {
+        Schema<?> dataSchema = new Schema<>();
+        dataSchema.setType("object");
+        List<String> fields = entity.getAllFieldNames();
+        for (String fieldNm : fields) {
+            ModelField field = entity.getField(fieldNm);
+            Schema<?> schema = null;
+            Class<?> schemaClass = getOpenApiTypeForFieldType(field.getType());
+            if (schemaClass == null) {
+                continue;
+            }
+            try {
+                schema = (Schema<?>) schemaClass.newInstance();
+            } catch (InstantiationException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+            dataSchema.addProperties(fieldNm, schema.description(fieldNm));
+        }
+        return dataSchema;
+    }
+
 }

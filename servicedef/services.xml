@@ -30,4 +30,17 @@ under the License.
         </description>
     </service> 
     
+    
+    <service name="createDetailedProduct" default-entity-name="Product" engine="groovy" action="POST" export="true"
+                location="component://product/groovyScripts/product/product/ProductServices.groovy" invoke="createProduct" auth="true">
+        <description>Create a Product</description>
+        <implements service="createProduct"/>
+        <attribute name="prices" mode="IN" type="GenericEntity" entity-name="ProductPrice"/>
+        <attribute name="pricesWithMan" mode="IN" type="Map">
+            <attribute name="pricePointInt" type="Integer"/>
+            <attribute name="pricePointString" type="String"/>
+        </attribute>
+    </service>
+    
+    
 </services>

@@ -188,50 +188,11 @@ public final class OFBizOpenApiReader implements OpenApiReader {
     }
 
     private void setOutSchemaForService(ModelService service) {
-        Schema<Object> parentSchema = new Schema<Object>();
-        parentSchema.setDescription("Out Schema for service: " + service.name + " response");
-        parentSchema.setType("object");
-        parentSchema.addProperties("statusCode", new IntegerSchema().description("HTTP Status Code"));
-        parentSchema.addProperties("statusDescription", new StringSchema().description("HTTP Status Code Description"));
-        parentSchema.addProperties("successMessage", new StringSchema().description("Success Message"));
-        ObjectSchema dataSchema = new ObjectSchema();
-        parentSchema.addProperties("data", dataSchema);
-        service.getOutParamNamesMap().forEach((name, type) -> {
-            Schema<?> schema = null;
-            Class<?> schemaClass = OpenApiUtil.getOpenApiSchema(type);
-            if (schemaClass == null) {
-                return;
-            }
-            try {
-                schema = (Schema<?>) schemaClass.newInstance();
-            } catch (InstantiationException | IllegalAccessException e) {
-            }
-            if (schema instanceof ArraySchema) {
-                ArraySchema arraySchema = (ArraySchema) schema;
-                arraySchema.items(new StringSchema());
-            }
-            dataSchema.addProperties(name, schema.description(name));
-        });
-        schemas.put(service.name + "Response", parentSchema);
+        schemas.put(service.name + "Response", OpenApiUtil.getOutSchema(service));
     }
 
     private void setInSchemaForService(ModelService service) {
-        Schema<Object> parentSchema = new Schema<Object>();
-        parentSchema.setDescription("In Schema for service: " + service.name + " request");
-        parentSchema.setType("object");
-        service.getInParamNamesMap().forEach((name, type) -> {
-            Schema<?> schema = null;
-            Class<?> schemaClass = OpenApiUtil.getOpenApiSchema(type);
-            if (schemaClass == null) {
-                return;
-            }
-            try {
-                schema = (Schema<?>) schemaClass.newInstance();
-            } catch (InstantiationException | IllegalAccessException e) {
-            }
-            parentSchema.addProperties(name, schema.description(name));
-        });
-        schemas.put(service.name + "Request", parentSchema);
+        schemas.put(service.name + "Request", OpenApiUtil.getInSchema(service));
     }
 
 }
