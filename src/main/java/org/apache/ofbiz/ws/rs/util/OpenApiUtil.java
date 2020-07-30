@@ -163,6 +163,9 @@ public final class OpenApiUtil {
     }
 
     private static Schema<?> getAttributeSchema(ModelService service, ModelParam param) {
+        Debug.log(
+                "Attribute '" + param.name + "' and type '" + param.type + "'",
+                MODULE);
         Schema<?> schema = null;
         Class<?> schemaClass = getOpenApiTypeForAttributeType(param.type);
         if (schemaClass == null) {
@@ -180,7 +183,7 @@ public final class OpenApiUtil {
         List<ModelParam> children = param.getChildList();
         Delegator delegator = WebAppUtil.getDelegator(ApiContextListener.getApplicationCntx());
         if (schema instanceof ArraySchema) {
-            schema = getAttributeSchema(service, children.get(0));
+            ((ArraySchema) schema).setItems(getAttributeSchema(service, children.get(0)));
         } else if (schema instanceof MapSchema) {
             if (isTypeGenericEntityOrGenericValue(param.type)) {
                 if (UtilValidate.isEmpty(param.entityName)) {
