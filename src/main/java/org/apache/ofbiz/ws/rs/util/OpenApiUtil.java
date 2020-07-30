@@ -65,8 +65,8 @@ public final class OpenApiUtil {
         CLASS_ALIAS.put("java.sql.Time", "String");
         CLASS_ALIAS.put("Timestamp", "Timestamp");
         CLASS_ALIAS.put("java.sql.Timestamp", "Timestamp");
-        CLASS_ALIAS.put("Integer", "Int");
-        CLASS_ALIAS.put("java.lang.Integer", "Int");
+        CLASS_ALIAS.put("Integer", "Integer");
+        CLASS_ALIAS.put("java.lang.Integer", "Integer");
         CLASS_ALIAS.put("Long", "Long");
         CLASS_ALIAS.put("java.lang.Long", "Long");
         CLASS_ALIAS.put("BigInteger", "BigInteger");
@@ -113,9 +113,7 @@ public final class OpenApiUtil {
         JAVA_OPEN_API_MAP.put("BigDecimal", NumberSchema.class);
         JAVA_OPEN_API_MAP.put("BigInteger", IntegerSchema.class);
         JAVA_OPEN_API_MAP.put("Timestamp", DateSchema.class);
-        
-        
-        
+
         FIELD_TYPE_MAP.put("id", "String");
         FIELD_TYPE_MAP.put("indicator", "String");
         FIELD_TYPE_MAP.put("date", "String");
@@ -143,14 +141,13 @@ public final class OpenApiUtil {
         FIELD_TYPE_MAP.put("object", "Byte");
         FIELD_TYPE_MAP.put("byte-array", "Byte");
         FIELD_TYPE_MAP.put("blob", "Byte");
-        
 
     }
 
     public static Class<?> getOpenApiTypeForAttributeType(String attributeType) {
         return JAVA_OPEN_API_MAP.get(CLASS_ALIAS.get(attributeType));
     }
-    
+
     public static Class<?> getOpenApiTypeForFieldType(String fieldType) {
         return JAVA_OPEN_API_MAP.get(FIELD_TYPE_MAP.get(fieldType));
     }
@@ -160,57 +157,18 @@ public final class OpenApiUtil {
         parentSchema.setDescription("In Schema for service: " + service.name + " request");
         parentSchema.setType("object");
         service.getInParamNamesMap().forEach((name, type) -> {
-            System.out.println("Name: " + name + ", Type: " + type);
-            Schema<?> schema = null;
-            Class<?> schemaClass = getOpenApiTypeForAttributeType(type);
-            if (schemaClass == null) {
-                return;
-            }
-            try {
-                schema = (Schema<?>) schemaClass.newInstance();
-            } catch (InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
-
-            if (schema instanceof ArraySchema) {
-                ModelParam param = service.getParam(name);
-            } else if (schema instanceof MapSchema) {
-                ModelParam param = service.getParam(name);
-                if (isTypeGenericEntityOrGenericValue(type)) {
-                    if (UtilValidate.isEmpty(param.entityName)) {
-                        Debug.logWarning(
-                                "Attribute '" + param.name + "' ignored as it is declared as '" + type + "' but does not have entity-name defined.",
-                                MODULE);
-                        return;
-                    } else {
-                        Delegator delegator = WebAppUtil.getDelegator(ApiContextListener.getApplicationCntx());
-                        //ObjectSchema entitySchema = getSchemaForEntity(delegator.getModelEntity(param.entityName));
-                        Schema<?> entitySchema = getSchemaForEntity(delegator.getModelEntity(param.entityName));
-                        parentSchema.addProperties(name, entitySchema);
-                    }
-                } else if (UtilValidate.isEmpty(param.getChildList())) {
-                    Debug.logWarning(
-                            "Attribute '" + param.name + "' ignored as it is declared as '" + type + "' but does not have any child attributes.",
-                            MODULE);
-                    return;
-                }else {
-                    List<ModelParam> children = param.getChildList();
-                    
-                }
-
-            } else {
-                parentSchema.addProperties(name, schema.description(name));
-            }
-
+            parentSchema.addProperties(name, getAttributeSchema(service, service.getParam(name)));
         });
         return parentSchema;
     }
-    
+
     private static Schema<?> getAttributeSchema(ModelService service, ModelParam param) {
-        System.out.println("Name: " + param.name + ", Type: " + param.type);
         Schema<?> schema = null;
         Class<?> schemaClass = getOpenApiTypeForAttributeType(param.type);
         if (schemaClass == null) {
+            Debug.logWarning(
+                    "Attribute '" + param.name + "' ignored as it is declared as '" + param.type + "' and corresponding OpenApi Type Mapping not found.",
+                    MODULE);
             return null;
         }
         try {
@@ -219,10 +177,11 @@ public final class OpenApiUtil {
             e.printStackTrace();
         }
 
+        List<ModelParam> children = param.getChildList();
+        Delegator delegator = WebAppUtil.getDelegator(ApiContextListener.getApplicationCntx());
         if (schema instanceof ArraySchema) {
-           // ModelParam param = service.getParam(param.name);
+            schema = getAttributeSchema(service, children.get(0));
         } else if (schema instanceof MapSchema) {
-            //ModelParam param = service.getParam(name);
             if (isTypeGenericEntityOrGenericValue(param.type)) {
                 if (UtilValidate.isEmpty(param.entityName)) {
                     Debug.logWarning(
@@ -230,25 +189,23 @@ public final class OpenApiUtil {
                             MODULE);
                     return null;
                 } else {
-                    Delegator delegator = WebAppUtil.getDelegator(ApiContextListener.getApplicationCntx());
-                    //ObjectSchema entitySchema = getSchemaForEntity(delegator.getModelEntity(param.entityName));
                     schema = getSchemaForEntity(delegator.getModelEntity(param.entityName));
-                    //parentSchema.addProperties(name, entitySchema);
                 }
             } else if (UtilValidate.isEmpty(param.getChildList())) {
                 Debug.logWarning(
                         "Attribute '" + param.name + "' ignored as it is declared as '" + param.type + "' but does not have any child attributes.",
                         MODULE);
                 return null;
-            }else {
-                List<ModelParam> children = param.getChildList();
-                
+            } else {
+                for (ModelParam childParam : children) {
+                    schema.addProperties(childParam.name, getAttributeSchema(service, childParam));
+                }
+
             }
 
-        } 
-        return schema; 
+        }
+        return schema;
     }
-    
 
     public static Schema<Object> getOutSchema(ModelService service) {
         Schema<Object> parentSchema = new Schema<Object>();

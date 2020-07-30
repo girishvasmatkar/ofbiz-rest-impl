@@ -36,7 +36,7 @@ under the License.
         <description>Create a Product</description>
         <implements service="createProduct"/>
         <attribute name="prices" mode="IN" type="GenericEntity" entity-name="ProductPrice"/>
-        <attribute name="pricesWithMan" mode="IN" type="Map">
+        <attribute name="pricesWithMap" mode="IN" type="Map">
             <attribute name="pricePointInt" type="Integer"/>
             <attribute name="pricePointString" type="String"/>
         </attribute>
